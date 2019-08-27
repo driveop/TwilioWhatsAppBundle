@@ -1,6 +1,8 @@
 # DriveOpTwilioBundle
 A simple Symfony bundle for Twilio Api.
 
+# Only SMS/WhatsApp!
+
 ## Setup
 
 ### Step 1: Download DriveOpTwilioBundle using composer
@@ -10,7 +12,7 @@ Add Twilio Bundle in your composer.json:
 ```js
 {
     "require": {
-        "driveop/twilio-bundle": "^1.0"
+        "driveop/twilio-bundle": "^0.1"
     }
 }
 ```
