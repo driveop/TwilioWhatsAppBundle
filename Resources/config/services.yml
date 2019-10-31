@@ -1,0 +1,9 @@
+parameters:
+     twilio_client.class: DriveOp\TwilioBundle\Services\TwilioClient
+
+services:
+     DriveOp\TwilioBundle\Services\TwilioClient: "@twilio_client"
+     twilio_client:
+         class:     "%twilio_client.class%"
+         arguments: ["%twilio_sid%", "%twilio_token%"]
+         autowire: true
