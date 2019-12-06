@@ -19,6 +19,8 @@ class TwilioClient
      * TwilioClient constructor.
      * @param $twilio_sid
      * @param $twilio_token
+     * @throws \Twilio\Exceptions\ConfigurationException
+     *
      */
     public function __construct($twilio_sid, $twilio_token)
     {
@@ -30,22 +32,26 @@ class TwilioClient
      * @param $to
      * @param $from
      * @param $body
-     * @return mixed
+     * @param null $mediaUrl
+     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @throws \Twilio\Exceptions\TwilioException
      */
-    public function sendWhatsAppMessage($to, $from, $body)
+    public function sendWhatsAppMessage($to, $from, $body, $mediaUrl = null)
     {
-        return $this->sendMessage($to, $from, $body, self::MESSAGE_WHATSAPP);
+        return $this->sendMessage($to, $from, $body, self::MESSAGE_WHATSAPP, $mediaUrl);
     }
 
     /**
      * @param $to
      * @param $from
      * @param $body
-     * @return mixed
+     * @param null $mediaUrl
+     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @throws \Twilio\Exceptions\TwilioException
      */
-    public function sendSMSMessage($to, $from, $body)
+    public function sendSMSMessage($to, $from, $body, $mediaUrl = null)
     {
-        return $this->sendMessage($to, $from, $body, self::MESSAGE_SMS);
+        return $this->sendMessage($to, $from, $body, self::MESSAGE_SMS, $mediaUrl);
     }
 
     /**
@@ -53,25 +59,28 @@ class TwilioClient
      * @param $from
      * @param $body
      * @param $type
-     * @return mixed
+     * @param null $mediaUrl
+     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @throws \Twilio\Exceptions\TwilioException
      */
-    private function sendMessage($to, $from, $body, $type)
+    private function sendMessage($to, $from, $body, $type, $mediaUrl = null)
     {
         if ($type == self::MESSAGE_WHATSAPP) {
             $to = "whatsapp:{$to}";
             $from =  "whatsapp:{$from}";
         }
 
-        $message = $this->service->messages
-            ->create(
-                $to, // to
-                [
-                    "from" => $from,
-                    "body" => $body
-                ]
-            );
+        $bodyArray = [
+            "from" => $from,
+            "body" => $body
+        ];
 
-        return $message;
+        if ($mediaUrl)  $bodyArray['mediaUrl'] = [$mediaUrl];
+
+        return $this->service->messages->create(
+                $to, // to
+                $bodyArray
+        );
     }
 
 }
